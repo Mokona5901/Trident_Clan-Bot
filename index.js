@@ -148,14 +148,16 @@ client.on('interactionCreate', async interaction =>
 					console.log(data);
 				  });*/
 				const tournamentEmbed = new EmbedBuilder()
-				/*.setColor('a04494')*/
+				/*.setColor(
+					{ value: "Purple" })*/
 				.addFields(
                 	{ name: '__ACEs Tournament #3__', value: ' ' },
                 	{ name: '__Description :__', value: 'For that tournament, you will only be able to use event forms pokemons.' },
 					{ name: '__Requirements :__', value: '> One Gmax Pokémon maximum\n > One Mega Pokémon maximum\n > One Legendary/Mythical Pokémon maximum\n > One Easter event Pokémon maximum\n > God Pokémon are banned\n > No illegal pokemons allowed <:minion_stare:1070271546016399401>'},
-                	{ name: '__Number of contestants :__', value: '8' },
+                	{ name: '__Maximum number of contestants :__', value: '8' },
+					{ name: 'Current number of contestants', value: '1'},
                 	{ name: '__When ?__', value: '<t:1683880200:F>' },
-					{ name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 25k\n > 2nd : Mid IV Legendary/Mythical + 20k' });
+					{ name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 100k\n > 2nd : Mid IV Legendary/Mythical + 50k' });
 				await interaction.reply({ embeds: [tournamentEmbed] });
 			};
 				timeStamp = Date.now();
