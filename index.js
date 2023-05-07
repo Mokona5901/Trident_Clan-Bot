@@ -74,7 +74,7 @@ client.on('interactionCreate', async interaction =>
 		if (interaction.commandName === 'user')
 			{
 				const user = interaction.options.getUser('user');
-				await interaction.reply(`${user.username} joined on ${interaction.options.getUser('user').member.joinedAt}.`);
+				await interaction.reply(`${user.username} joined on ${interaction.member.joinedAt}.`);
 				timeStamp = Date.now();
 				var dateFormat = new Date(timeStamp);
 				console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);

@@ -9,6 +9,6 @@ For now, it have 6 commands :
 - [X] rob-balls
 - [X] server
 - [X] tournament
-- [ ] user
+- [X] user
 
 It have a working error handler to prevent it from crashing.
