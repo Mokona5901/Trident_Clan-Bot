@@ -8,7 +8,7 @@ For now, it have 6 commands :
 - [X] ping
 - [X] rob-balls
 - [X] server
-- [ ] tournament
+- [X] tournament
 - [ ] user
 
 It have a working error handler to prevent it from crashing.
