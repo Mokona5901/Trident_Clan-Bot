@@ -16,13 +16,6 @@ module.exports = {
                 { name: '__Number of contestants :__', value: '8' },
                 { name: '__When ?__', value: '<t:1683880200:F>' },
                 { name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 25k\n > 2nd : Mid IV Legendary/Mythical + 20k' });
-                /*fs.appendFile('tournament.txt', 'This is some text to append to the file', function(err) {
-                    if (err) {
-                        console.error('Error appending data to file:', err);
-                    } else {
-                        console.log('Data was appended to the file');
-                    }
-                      });*/
        await interaction.reply({ embeds: [tournamentEmbed] });
     },
 };

@@ -1,4 +1,4 @@
-const { Client, Events, GatewayIntentBits, ActivityType/*, EmbedBuilder*/} = require('discord.js');
+const { Client, Events, GatewayIntentBits, ActivityType } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('@discordjs/builders');
 const { token } = require('./config.json');
@@ -17,14 +17,11 @@ client.once(Events.ClientReady, c =>
 		console.log(`Ready! Logged in as ${c.user.tag}`);
 		//client.user.setStatus('dnd');
 		//client.user.setActivity('you', { type: "WATCHING" });
-		client.user.setActivity('to your profile', {
+		client.user.setActivity('the next ACEs Tournament', {
 			type: ActivityType.Watching,
 		  });
 	}
 );
-
-//client.once('ready', () => { client.user.setActivity('Bots', { type: "WATCHING" }); });
-
 
 // Log in to Discord with your client's token
 client.login(token);
@@ -132,21 +129,12 @@ client.on('interactionCreate', async interaction =>
 );
 
 //tournament-status command
-
 client.on('interactionCreate', async interaction =>
 	{
 		if (!interaction.isCommand()) return;
 
 		if (interaction.commandName === 'news')
 			{
-				/*filePath = 'C:/Users/samue/OneDrive/Documents/GitHub/ACEs-Bot/tournament.txt';
-				fs.readFile(filePath, 'utf8', function(err, data) {
-					if (err) {
-					  console.error(err);
-					  return;
-					}
-					console.log(data);
-				  });*/
 				const tournamentEmbed = new EmbedBuilder()
 				/*.setColor(
 					{ value: "Purple" })*/
@@ -166,10 +154,21 @@ client.on('interactionCreate', async interaction =>
 	},
 );
 
-
+//reminder command
+client.on('interactionCreate', async (interaction) => {
+	if (!interaction.isCommand()) return;
+  
+	if (interaction.commandName === 'reminder') {
+	  const time = interaction.options.getString('time');
+	  const message = interaction.options.getString('message');
+  
+	  // Logic to handle the reminder and send the message goes here
+  
+	  await interaction.reply('Reminder set successfully!');
+	}
+  });
 
 //Error handler
-
 client.on('message', (msg) => {
 	// Your message handling code
   });
