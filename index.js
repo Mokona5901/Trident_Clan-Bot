@@ -153,9 +153,9 @@ client.on('interactionCreate', async interaction =>
 				.addFields(
                 	{ name: '__ACEs Tournament #3__', value: ' ' },
                 	{ name: '__Description :__', value: 'For that tournament, you will only be able to use event forms pokemons.' },
-					{ name: '__Requirements :__', value: '> One Gmax Pokémon maximum\n > One Mega Pokémon maximum\n > One Legendary/Mythical Pokémon maximum\n > One Easter event Pokémon maximum\n > God Pokémon are banned\n > No illegal pokemons allowed <:minion_stare:1070271546016399401>'},
+					{ name: '__Requirements :__', value: '> One Gmax Pokémon maximum\n > One Mega Pokémon maximum\n > One Legendary/Mythical Pokémon maximum\n > One Easter event Pokémon maximum / Non-event form with "Obtained from a Community Event" tag\n > God Pokémon are banned\n > No illegal pokemons allowed <:minion_stare:1070271546016399401>'},
                 	{ name: '__Maximum number of contestants :__', value: '8' },
-					{ name: '__Current number of contestants__', value: '1'},
+					{ name: '__Current number of contestants who entered :__', value: '3'},
                 	{ name: '__When ?__', value: '<t:1683880200:F>' },
 					{ name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 100k\n > 2nd : Mid IV Legendary/Mythical + 50k' });
 				await interaction.reply({ embeds: [tournamentEmbed] });
