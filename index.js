@@ -8,7 +8,7 @@ const ytdl = require('ytdl-core-discord');
 // Create a new client instance
 const client = new Client(
 	{ 
-		intents: [GatewayIntentBits.Guilds, Intents.FLAGS.GUILD_VOICE_STATES] 
+		intents: [GatewayIntentBits.Guilds/*, Intents.FLAGS.GUILD_VOICE_STATES*/] 
 	}
 	);
 
