@@ -1,7 +1,7 @@
 # ACEs-Bot
 Cool bot for ACEs clan, #1 clan of Poké Catcher Official made with discord.js
 
-For now, it have 7 commands :
+For now, it have 8 commands :
 - [X] Is functional :
 
 - [X] news
