@@ -7,6 +7,7 @@ For now, it have 7 commands :
 - [X] news
 - [X] ping
 - [ ] play
+- [X] reminder
 - [X] rob-balls
 - [X] server
 - [X] tournament
