@@ -1,4 +1,4 @@
-const { Client, Events, GatewayIntentBits, ActivityType } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ActivityType, Intents } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('@discordjs/builders');
 const { token } = require('./config.json');
@@ -8,7 +8,7 @@ const ytdl = require('ytdl-core-discord');
 // Create a new client instance
 const client = new Client(
 	{ 
-		intents: [GatewayIntentBits.Guilds/*, Intents.FLAGS.GUILD_VOICE_STATES*/] 
+		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] 
 	}
 	);
 
@@ -156,10 +156,6 @@ client.on('interactionCreate', async interaction =>
 );
 
 //reminder command
-
-
-
-
 const reminders = new Map();
 
 function setReminder(time, message, userId) {
@@ -213,33 +209,8 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 
-
-
-
-
-/*
-client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isCommand()) return;
-  
-	if (interaction.commandName === 'reminder') {
-	  const timeInput = interaction.options.getString('time');
-	  const message = interaction.options.getString('message');
-  
-	  // Logic to handle the reminder and send the message goes here
-	  
-	  const time = new Date(timeInput);
-
-	  // Check if the provided time is a valid date
-	  if (isNaN(time.getTime())) {
-		return interaction.reply('Invalid time format. Please provide a valid date and time.');
-	  }
-
-	  await interaction.reply('Reminder set successfully!');
-	}
-  });*/
-
-
-  client.on('interactionCreate', async interaction =>
+//play command
+client.on('interactionCreate', async interaction =>
 	{
 		if (!interaction.isCommand()) return;
 
