@@ -6,7 +6,7 @@ const command = new SlashCommandBuilder()
 		.setDescription('Set a reminder.')
 		.addStringOption(option => 
 			option.setName('time')
-				.setDescription('When to be reminded')
+				.setDescription('When to be reminded (Syntax : <today or tomorrow> <hour + AM/PM>')
 				.setRequired(true),
 		)
         .addStringOption(option => 

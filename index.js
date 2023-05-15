@@ -3,11 +3,12 @@ const { Client, Events, GatewayIntentBits, ActivityType } = require('discord.js'
 const { EmbedBuilder } = require('@discordjs/builders');
 const { token } = require('./config.json');
 const fs = require('fs');
+const ytdl = require('ytdl-core-discord');
 
 // Create a new client instance
 const client = new Client(
 	{ 
-		intents: [GatewayIntentBits.Guilds] 
+		intents: [GatewayIntentBits.Guilds, Intents.FLAGS.GUILD_VOICE_STATES] 
 	}
 	);
 
@@ -17,7 +18,7 @@ client.once(Events.ClientReady, c =>
 		console.log(`Ready! Logged in as ${c.user.tag}`);
 		//client.user.setStatus('dnd');
 		//client.user.setActivity('you', { type: "WATCHING" });
-		client.user.setActivity('the next ACEs Tournament', {
+		client.user.setActivity('the postponed tourny', {
 			type: ActivityType.Watching,
 		  });
 	}
@@ -155,18 +156,134 @@ client.on('interactionCreate', async interaction =>
 );
 
 //reminder command
+
+
+
+
+const reminders = new Map();
+
+function setReminder(time, message, userId) {
+  const reminderTime = new Date(time);
+  const currentTime = new Date();
+
+  if (reminderTime <= currentTime) {
+    return 'Invalid reminder time. Please provide a future time.';
+  }
+
+  const timeDifference = reminderTime.getTime() - currentTime.getTime();
+
+  const reminder = setTimeout(() => {
+    const user = client.users.cache.get(userId);
+    user.send(`⏰ Reminder: ${message}`);
+    reminders.delete(userId);
+  }, timeDifference);
+
+  reminders.set(userId, reminder);
+  return 'Reminder set successfully!';
+}
+
+function clearReminder(userId) {
+  if (reminders.has(userId)) {
+    clearTimeout(reminders.get(userId));
+    reminders.delete(userId);
+    return 'Reminder cleared successfully!';
+  }
+  return 'You have no active reminders.';
+}
+
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  if (interaction.commandName === 'reminder') {
+    const time = interaction.options.getString('time');
+    const message = interaction.options.getString('message');
+    const userId = interaction.user.id;
+
+    if (time && message) {
+      const response = setReminder(time, message, userId);
+      await interaction.reply(response);
+    } else {
+      await interaction.reply('Invalid command usage. Please provide both time and message.');
+    }
+  } /*else if (interaction.commandName === 'clearreminder') {
+    const userId = interaction.user.id;
+    const response = clearReminder(userId);
+    await interaction.reply(response);
+  }*/
+});
+
+
+
+
+
+
+/*
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
   
 	if (interaction.commandName === 'reminder') {
-	  const time = interaction.options.getString('time');
+	  const timeInput = interaction.options.getString('time');
 	  const message = interaction.options.getString('message');
   
 	  // Logic to handle the reminder and send the message goes here
-  
+	  
+	  const time = new Date(timeInput);
+
+	  // Check if the provided time is a valid date
+	  if (isNaN(time.getTime())) {
+		return interaction.reply('Invalid time format. Please provide a valid date and time.');
+	  }
+
 	  await interaction.reply('Reminder set successfully!');
 	}
+  });*/
+
+
+  client.on('interactionCreate', async interaction =>
+	{
+		if (!interaction.isCommand()) return;
+
+		if (interaction.commandName === 'play')
+			{
+
+  
+				// Check if the user is in a voice channel
+				if (!interaction.member.voice.channel) {
+	 			 	await interaction.reply('You need to be in a voice channel to play music!');
+	  				return;
+					}
+  
+				// Join the voice channel
+				const connection = await interaction.member.voice.channel.join();
+  
+				// Get the video URL from the slash command arguments
+				const url = interaction.options.getString('url');
+  
+				// Play the YouTube audio stream in the voice channel
+				const stream = await ytdl(url, { filter: 'audioonly' });
+				const dispatcher = connection.play(stream, { type: 'opus' });
+  
+				dispatcher.on('start', () => {
+	 			console.log('Playing audio in the voice channel!');
+				interaction.reply('Now playing: ' + url);
+				});
+  
+				dispatcher.on('finish', () => {
+	  			console.log('Finished playing audio!');
+	  			interaction.member.voice.channel.leave();
+				});
+  
+				dispatcher.on('error', (err) => {
+	  			console.error(err);
+	  			interaction.member.voice.channel.leave();
+				});
+  			};
   });
+
+
+
+
+
 
 //Error handler
 client.on('message', (msg) => {
