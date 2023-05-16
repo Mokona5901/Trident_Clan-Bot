@@ -29,7 +29,7 @@ client.login(token);
 
 
 client.on('message', message => {
-	if (message.mentions.has(c.user)) {
+	if (message.mentions.has(client.user)) {
 	  message.channel.send('Hey there!');
 	}
   });
@@ -199,7 +199,7 @@ client.on('interactionCreate', async (interaction) => {
       const response = setReminder(time, message, userId);
       await interaction.reply(response);
     } else {
-      await interaction.reply('Invalid command usage. Please provide both time and message.');
+      await interaction.reply('Invalid command usage. Please provide both time and message. Syntax : <today or tomorrow> <hour + AM/PM>. French timezone');
     }
   } /*else if (interaction.commandName === 'clearreminder') {
     const userId = interaction.user.id;
@@ -213,11 +213,8 @@ client.on('interactionCreate', async (interaction) => {
 client.on('interactionCreate', async interaction =>
 	{
 		if (!interaction.isCommand()) return;
-
 		if (interaction.commandName === 'play')
 			{
-
-  
 				// Check if the user is in a voice channel
 				if (!interaction.member.voice.channel) {
 	 			 	await interaction.reply('You need to be in a voice channel to play music!');
@@ -249,12 +246,7 @@ client.on('interactionCreate', async interaction =>
 	  			interaction.member.voice.channel.leave();
 				});
   			};
-  });
-
-
-
-
-
+});
 
 //Error handler
 client.on('message', (msg) => {
