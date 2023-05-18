@@ -18,7 +18,7 @@ client.once(Events.ClientReady, c =>
 		console.log(`Ready! Logged in as ${c.user.tag}`);
 		//client.user.setStatus('dnd');
 		//client.user.setActivity('you', { type: "WATCHING" });
-		client.user.setActivity('the postponed tourny', {
+		client.user.setActivity('ACEs Tournament #3', {
 			type: ActivityType.Watching,
 		  });
 	}
