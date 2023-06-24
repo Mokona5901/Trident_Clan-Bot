@@ -8,6 +8,33 @@ const command = new SlashCommandBuilder()
 module.exports = {
     data: command,
     async execute(interaction) {
+
+        /*// Create options for the dropdown list
+				const option1 = new StringSelectMenuOptionBuilder()
+				.setLabel('Option 1')
+				.setValue('option1')
+				.setDescription('This is the first option');
+
+				const option2 = new StringSelectMenuOptionBuilder()
+				.setLabel('Option 2')
+				.setValue('option2')
+				.setDescription('This is the second option');
+
+				// Create the dropdown list
+				const selectMenu = new MessageSelectMenu()
+				.setCustomId('dropdown')
+				.setPlaceholder('Select an option')
+				.addOptions([option1, option2]);
+
+				// Create an action row to contain the dropdown list
+				const actionRow = new MessageActionRow().addComponents(selectMenu);
+
+                await interaction.reply({
+                    content: 'Please select an option:',
+                    components: [actionRow], // Add the action row with the dropdown list
+                  });*/
+
+
         const tournamentEmbed = new EmbedBuilder()
             .addFields(
                 { name: '__ACEs Tournament #3__', value: ' ' },

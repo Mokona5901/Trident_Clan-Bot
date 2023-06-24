@@ -1,9 +1,10 @@
-const { Client, Events, GatewayIntentBits, ActivityType, Intents } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ActivityType, ColorResolvable, MessageSelectMenu, StringSelectMenuOptionBuilder } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('@discordjs/builders');
 const { token } = require('./config.json');
 const fs = require('fs');
 const ytdl = require('ytdl-core-discord');
+const contestants = "2";
 
 // Create a new client instance
 const client = new Client(
@@ -18,7 +19,7 @@ client.once(Events.ClientReady, c =>
 		console.log(`Ready! Logged in as ${c.user.tag}`);
 		//client.user.setStatus('dnd');
 		//client.user.setActivity('you', { type: "WATCHING" });
-		client.user.setActivity('ACEs Tournament #3', {
+		client.user.setActivity(`${contestants} contestants`, {
 			type: ActivityType.Watching,
 		  });
 	}
@@ -136,18 +137,46 @@ client.on('interactionCreate', async interaction =>
 
 		if (interaction.commandName === 'news')
 			{
+				/*// Create options for the dropdown list
+				const option1 = new StringSelectMenuOptionBuilder()
+				.setLabel('Option 1')
+				.setValue('option1')
+				.setDescription('This is the first option');
+
+				const option2 = new StringSelectMenuOptionBuilder()
+				.setLabel('Option 2')
+				.setValue('option2')
+				.setDescription('This is the second option');
+
+				// Create the dropdown list
+				const selectMenu = new MessageSelectMenu()
+				.setCustomId('dropdown')
+				.setPlaceholder('Select an option')
+				.addOptions([option1, option2]);
+
+				// Create an action row to contain the dropdown list
+				const actionRow = new MessageActionRow().addComponents(selectMenu);
+
+				await interaction.reply({
+					content: 'Please select an option:',
+					components: [actionRow], // Add the action row with the dropdown list
+				  });*/
+				
 				const tournamentEmbed = new EmbedBuilder()
-				/*.setColor(
-					{ value: "Purple" })*/
+				/*.setColor("Purple")*/
 				.addFields(
-                	{ name: '__ACEs Tournament #3__', value: ' ' },
-                	{ name: '__Description :__', value: 'For that tournament, you will only be able to use event forms pokemons.' },
-					{ name: '__Requirements :__', value: '> One Gmax Pokémon maximum\n > One Mega Pokémon maximum\n > One Legendary/Mythical Pokémon maximum\n > One Easter event Pokémon maximum / Non-event form with "Obtained from a Community Event" tag\n > God Pokémon are banned\n > No illegal pokemons allowed <:minion_stare:1070271546016399401>'},
+                	{ name: '__🔱 members Tournament #5__', value: ' ' },
+                	{ name: '__Description :__', value: 'Your team will need to come from Kanto region' },
+					{ name: '__Requirements :__', value: '> All Pokémons must be from Kanto\n > You cannot use the same Pokémon twice\n > One Gmax Pokémon maximum\n > One Mega Pokémon maximum\n > One Legendary or Mythical Pokémon maximum\n > Alts forms are allowed\n > Event Pokémons are allowed\n > God typing Pokémon are banned\n No illegal pokemons allowed <:minion_stare:1070271546016399401>'},
                 	{ name: '__Maximum number of contestants :__', value: '8' },
-					{ name: '__Current number of contestants who entered :__', value: '3'},
-                	{ name: '__When ?__', value: '<t:1683880200:F>' },
-					{ name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 100k\n > 2nd : Mid IV Legendary/Mythical + 50k' });
-				await interaction.reply({ embeds: [tournamentEmbed] });
+					{ name: `__Current number of contestants who entered :__`, value: `${contestants}`},
+                	{ name: '__When ?__', value: '<t:1688115600:F>' },
+					{ name: '__Prizes__', value: '> 1st : Good IV Legendary/Mythical + 250k\n > 2nd : Mid IV Legendary/Mythical + 100k' });
+					/*
+				.addFields(
+					{ name: '__ACEs Tournament #3 is on !__', value: 'Go check <#1102550299488563260> ' }
+				)*/
+					await interaction.reply({ embeds: [tournamentEmbed] });
 			};
 				timeStamp = Date.now();
 				var dateFormat = new Date(timeStamp);
