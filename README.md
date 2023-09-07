@@ -14,3 +14,5 @@ For now, it have 8 commands :
 - [X] user
 
 It have a working error handler to prevent it from crashing.
+
+commit 1b7fab1
