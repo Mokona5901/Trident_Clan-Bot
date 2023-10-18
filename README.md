@@ -1,5 +1,5 @@
-# ACEs-Bot
-Cool bot for ACEs clan, #1 clan of Poké Catcher Official made with discord.js
+# Trident_Clan-Bot
+Cool bot for Trident clan, #1 clan of Poké Catcher Official made with discord.js
 
 For now, it have 8 commands :
 - [X] Is functional :
@@ -15,4 +15,4 @@ For now, it have 8 commands :
 
 It have a working error handler to prevent it from crashing.
 
-Version from 07/09/2023
+Version from 18/10/2023
