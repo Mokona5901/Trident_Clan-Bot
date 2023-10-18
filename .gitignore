@@ -1,0 +1,9 @@
+/config.json
+/.git/
+/.config/
+/.upm/
+/node_modules/
+/package-lock.json
+/package.json
+/.replit
+/replit.nix
