@@ -15,4 +15,4 @@ For now, it have 8 commands :
 
 It have a working error handler to prevent it from crashing.
 
-Version from 18/10/2023
+Version from 6/11/2023
