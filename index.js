@@ -1,11 +1,12 @@
 const { Client, Events, GatewayIntentBits, ActivityType, ColorResolvable, MessageSelectMenu, StringSelectMenuOptionBuilder } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('@discordjs/builders');
-const { token } = require('./config.json');
+const { token } = require('./private/config.json');
 const fs = require('fs');
 const ytdl = require('ytdl-core-discord');
 const contestants = "1";
 const tournament_timestamp = "<t:1696939200:F>";
+const status = "when clan will revive";
 
 // Create a new client instance
 const client = new Client(
@@ -17,19 +18,124 @@ const client = new Client(
 // When the client is ready, run this code (only once)
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
-	//client.user.setStatus('dnd');
-	//client.user.setActivity('you', { type: "WATCHING" });
-	/*client.user.setActivity(`${contestants} contestants`, {
-		type: ActivityType.Watching,
-		});*/
-	client.user.setActivity(`the next tournament`, {
-		type: ActivityType.Watching,
-	});
-}
-);
+});
+//client.user.setStatus('dnd');
+//client.user.setActivity('you', { type: "WATCHING" });
+/*client.user.setActivity(`${contestants} contestants`, {
+	type: ActivityType.Watching,
+	});*/
+client.on('ready', () => {
+	client.user.setActivity(status, { type: ActivityType.Watching, });
+});
 
 // Log in to Discord with your client's token
 client.login(token);
+
+/*languages = [id, da, de, en-GB, en-US, es-ES, fr, hr, it, lt, hu, nl, no, pl, pt-BR, ro, fi, sv-SE, vi, tr, cs, el, bg, ru, uk, hi, th, zh-CN, ja, zh-TW, ko];
+
+	// Function to detect the user's language based on user.locale
+	function detectUserLanguage(user)
+		{
+			const userLocale = user.locale;
+			for(let i = 0; i < languages.length; i++)
+				{
+					if(userLocale.includes(languages[i]))
+						{
+							return languages[i];
+						}
+					else
+						{
+							return "en-US";
+						}
+				}
+		}
+
+	client.on('message', (message) =>
+		{
+		// Detect the user's language
+		const userLanguage = detectUserLanguage(client.user);
+		if (message.guild)
+			{
+				const member = message.guild.members.cache.get(message.author.id);
+				userLocale = member ? member.user.locale : 'en-US';
+			}
+		
+		// Define status messages for each language
+		let status = ' ';
+
+		switch (userLanguage)
+			{
+			case 'id':
+				return status = "online";
+			case 'da':
+				return status = "online";
+			case 'de':
+				return status = "online";
+			case 'en-GB':
+				return status = "online";
+			case 'en-US':
+				return status = "online";
+			case 'es-ES':
+				return status = "en línea";
+			case 'fr':
+				return status = "en ligne";
+			case 'hr':
+				return status = "online";
+			case 'it':
+				return status = "online";
+			case 'lt':
+				return status = "prisijungęs";
+			case 'hu':
+				return status = "online";
+			case 'nl':
+				return status = "online";
+			case 'no':
+				return status = "online";
+			case 'pl':
+				return status = "online";
+			case 'pt-BR':
+				return status = "online";
+			case 'ro':
+				return status = "online";
+			case 'fi':
+				return status = "online";
+			case 'sv-SE':
+				return status = "online";
+			case 'vi':
+				return status = "trực tuyến";
+			case 'tr':
+				return status = "çevrimiçi";
+			case 'cs':
+				return status = "online";
+			case 'el':
+				return status = "σε απευθείας σύνδεση";
+			case 'bg':
+				return status = "на линия";
+			case 'ru':
+				return status = "онлайн";
+			case 'uk':
+				return status = "онлайн";
+			case 'hi':
+				return status = "ऑनलाइन";
+			case 'th':
+				return status = "ออนไลน์";
+			case 'zh-CN':
+				return status = "在线";
+			case 'ja':
+				return status = "オンライン";
+			case 'zh-TW':
+				return status = "線上";
+			case 'ko':
+				return status = "온라인";
+			default:
+				return status = "online"; // Default to English
+			};
+		
+			console.log("userLocale : " + userLocale + " userLanguage : " + userLanguage + "status :" + status);
+		
+		client.user.setActivity(status, {
+			type: ActivityType.Watching,
+		})};*/
 
 const express = require('express');
 const app = express();
@@ -65,9 +171,6 @@ setInterval(() => {
 	console.log('Sending "Ping failed" response');
 	lastPingStatus = 'Ping failed';
 }, 60 * 1000); // 60,000 milliseconds = 1 minute
-
-
-
 
 
 client.on('message', message => {
@@ -135,8 +238,9 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === 'tournament') {
-		const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
-		if (interaction.member.roles.cache.has(ownerRole.id)) {
+		//const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
+		const serverOwnerId = interaction.guild.ownerId;
+		if (serverOwnerId === interaction.member.user.id) {
 			const ping = "<@&1111273420395655278>\n";
 			const title = "## 🔱 members Poké Catcher Tournament #8 :\n";
 			const description = "Hello members, today I announce you a new tournament, to revive dead server, it is a Anything Goes tournament !\n"
@@ -191,16 +295,18 @@ client.on('interactionCreate', async interaction => {
 
 		const tournamentEmbed = new EmbedBuilder()
 			/*.setColor("Purple")*/
-			/*.addFields(
-				{ name: 'No current tournament', value: 'but one is coming... <:black_man_shocked:1070808202486218853>' })*/
 			.addFields(
-				{ name: '__🔱 members Tournament #8__', value: 'Anything Goes !' },
-				{ name: '__Description :__', value: 'You can use any Pokémon' },
-				{ name: '__Requirements :__', value: '> You cannot use the same Pokémon twice' },
-				{ name: '__Maximum number of contestants :__', value: '8' },
-				{ name: `__Current number of contestants who entered :__`, value: `${contestants}` },
-				{ name: '__When ?__', value: `${tournament_timestamp}` },
-				{ name: '__Prizes__', value: '> 1st : Good IV Legendary + 200k\n > 2nd : Mid IV Legendary + 100k' });
+				{ name: 'No current tournament', value: ' ' })
+		/*.addFields(
+			{ name: 'No current tournament', value: 'but one is coming... <:black_man_shocked:1070808202486218853>' })*/
+		/*.addFields(
+			{ name: '__🔱 members Tournament #8__', value: 'Anything Goes !' },
+			{ name: '__Description :__', value: 'You can use any Pokémon' },
+			{ name: '__Requirements :__', value: '> You cannot use the same Pokémon twice' },
+			{ name: '__Maximum number of contestants :__', value: '8' },
+			{ name: `__Current number of contestants who entered :__`, value: `${contestants}` },
+			{ name: '__When ?__', value: `${tournament_timestamp}` },
+			{ name: '__Prizes__', value: '> 1st : Good IV Legendary + 200k\n > 2nd : Mid IV Legendary + 100k' });*/
 
 		/*.addFields(
 							{ name: '__🔱 members Tournament #8 is on !__', value: 'Go check <#1102550299488563260> ' }
