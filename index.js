@@ -824,11 +824,6 @@ process.on('unhandledRejection', (error) => {
 	console.error('Unhandled promise rejection:', error);
 });
 
-/*process.on('uncaughtException', (error) => {
-	console.error('Uncaught exception:', error);
-	process.exit(1); // Exit with error code 1
-});*/
-
 process.on('uncaughtException', (err) => {
 		const errorMessage = `Uncaught Exception: ${err.message}\nStack: ${err.stack}`;
 		console.error(errorMessage);
