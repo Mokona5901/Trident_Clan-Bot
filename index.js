@@ -1,11 +1,14 @@
-const { Client, Events, GatewayIntentBits, ActivityType, ColorResolvable, MessageSelectMenu, StringSelectMenuOptionBuilder } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ActivityType, MessageSelectMenu, StringSelectMenuOptionBuilder,  } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('@discordjs/builders');
-const { token } = require('./config.json');
+const { EmbedBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { token } = require('./private/config.json');
 const fs = require('fs');
 const ytdl = require('ytdl-core-discord');
-const contestants = "1";
+const contestants = "0";
 const tournament_timestamp = "<t:1696939200:F>";
+const status = "when clan will revive";
+const Mee6LevelsApi = require("mee6-levels-api");
+const SWMG_guildId = "1029760958698102934";
 
 // Create a new client instance
 const client = new Client(
@@ -17,19 +20,124 @@ const client = new Client(
 // When the client is ready, run this code (only once)
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
-	//client.user.setStatus('dnd');
-	//client.user.setActivity('you', { type: "WATCHING" });
-	/*client.user.setActivity(`${contestants} contestants`, {
-		type: ActivityType.Watching,
-		});*/
-	client.user.setActivity(`the next tournament`, {
-		type: ActivityType.Watching,
-	});
-}
-);
+});
+//client.user.setStatus('dnd');
+//client.user.setActivity('you', { type: "WATCHING" });
+/*client.user.setActivity(`${contestants} contestants`, {
+	type: ActivityType.Watching,
+	});*/
+client.on('ready', () => {
+	client.user.setActivity(status, { type: ActivityType.Watching, });
+});
 
 // Log in to Discord with your client's token
 client.login(token);
+
+/*languages = [id, da, de, en-GB, en-US, es-ES, fr, hr, it, lt, hu, nl, no, pl, pt-BR, ro, fi, sv-SE, vi, tr, cs, el, bg, ru, uk, hi, th, zh-CN, ja, zh-TW, ko];
+
+	// Function to detect the user's language based on user.locale
+	function detectUserLanguage(user)
+		{
+			const userLocale = user.locale;
+			for(let i = 0; i < languages.length; i++)
+				{
+					if(userLocale.includes(languages[i]))
+						{
+							return languages[i];
+						}
+					else
+						{
+							return "en-US";
+						}
+				}
+		}
+
+	client.on('message', (message) =>
+		{
+		// Detect the user's language
+		const userLanguage = detectUserLanguage(client.user);
+		if (message.guild)
+			{
+				const member = message.guild.members.cache.get(message.author.id);
+				userLocale = member ? member.user.locale : 'en-US';
+			}
+		
+		// Define status messages for each language
+		let status = ' ';
+
+		switch (userLanguage)
+			{
+			case 'id':
+				return status = "online";
+			case 'da':
+				return status = "online";
+			case 'de':
+				return status = "online";
+			case 'en-GB':
+				return status = "online";
+			case 'en-US':
+				return status = "online";
+			case 'es-ES':
+				return status = "en línea";
+			case 'fr':
+				return status = "en ligne";
+			case 'hr':
+				return status = "online";
+			case 'it':
+				return status = "online";
+			case 'lt':
+				return status = "prisijungęs";
+			case 'hu':
+				return status = "online";
+			case 'nl':
+				return status = "online";
+			case 'no':
+				return status = "online";
+			case 'pl':
+				return status = "online";
+			case 'pt-BR':
+				return status = "online";
+			case 'ro':
+				return status = "online";
+			case 'fi':
+				return status = "online";
+			case 'sv-SE':
+				return status = "online";
+			case 'vi':
+				return status = "trực tuyến";
+			case 'tr':
+				return status = "çevrimiçi";
+			case 'cs':
+				return status = "online";
+			case 'el':
+				return status = "σε απευθείας σύνδεση";
+			case 'bg':
+				return status = "на линия";
+			case 'ru':
+				return status = "онлайн";
+			case 'uk':
+				return status = "онлайн";
+			case 'hi':
+				return status = "ऑनलाइन";
+			case 'th':
+				return status = "ออนไลน์";
+			case 'zh-CN':
+				return status = "在线";
+			case 'ja':
+				return status = "オンライン";
+			case 'zh-TW':
+				return status = "線上";
+			case 'ko':
+				return status = "온라인";
+			default:
+				return status = "online"; // Default to English
+			};
+		
+			console.log("userLocale : " + userLocale + " userLanguage : " + userLanguage + "status :" + status);
+		
+		client.user.setActivity(status, {
+			type: ActivityType.Watching,
+		})};*/
 
 const express = require('express');
 const app = express();
@@ -62,12 +170,8 @@ app.listen(port, () => {
 
 // Simulate sending "Ping failed" every minute
 setInterval(() => {
-	console.log('Sending "Ping failed" response');
 	lastPingStatus = 'Ping failed';
 }, 60 * 1000); // 60,000 milliseconds = 1 minute
-
-
-
 
 
 client.on('message', message => {
@@ -76,36 +180,30 @@ client.on('message', message => {
 	}
 });
 
-//Ping interaction
+//ping command
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === 'ping') {
 		timeStamp = Date.now();
-		await interaction.reply(`Pong! Command's latency is ${timeStamp - interaction.createdTimestamp} ms.`);
+		await interaction.reply(`Pong! Command's latency is ${timeStamp - interaction.createdTimestamp} ms 🏓`);
 		var dateFormat = new Date(timeStamp);
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
-}
-);
-
-//Server interaction
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === 'server') {
-		await interaction.reply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+		if (interaction.guild.memberCount.toString().includes('69')) {
+			await interaction.reply(`This server is called ${interaction.guild.name} and has ${interaction.guild.memberCount} members. Lmao 69 <a:pepe_kek_explode:1179057815042662440>`)
+		}
+		else {
+			await interaction.reply(`This server is called ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+		}
 		timeStamp = Date.now();
 		var dateFormat = new Date(timeStamp);
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
-}
-);
 
-//User interaction
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
+	// user command
 	if (interaction.commandName === 'user') {
 		const user = interaction.options.getUser('user');
 		await interaction.reply(`${user.username} joined on ${interaction.member.joinedAt}.`);
@@ -113,13 +211,8 @@ client.on('interactionCreate', async interaction => {
 		var dateFormat = new Date(timeStamp);
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
-}
-);
 
-//Rob-balls interaction
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
+	// rob-balls command
 	if (interaction.commandName === 'rob-balls') {
 		const user = interaction.options.getUser('user');
 		await interaction.reply(`Stolen ${user.username} balls <:troll_blur:1130497483382988890>`);
@@ -127,16 +220,11 @@ client.on('interactionCreate', async interaction => {
 		var dateFormat = new Date(timeStamp);
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
-}
-);
-
-//Tournament interaction
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === 'tournament') {
-		const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
-		if (interaction.member.roles.cache.has(ownerRole.id)) {
+		//const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
+		const serverOwnerId = interaction.guild.ownerId;
+		if (serverOwnerId === interaction.member.user.id) {
 			const ping = "<@&1111273420395655278>\n";
 			const title = "## 🔱 members Poké Catcher Tournament #8 :\n";
 			const description = "Hello members, today I announce you a new tournament, to revive dead server, it is a Anything Goes tournament !\n"
@@ -152,17 +240,12 @@ client.on('interactionCreate', async interaction => {
 		else {
 			await interaction.reply('You do not have permission to use this command!');
 		}
-	};
-	timeStamp = Date.now();
-	var dateFormat = new Date(timeStamp);
-	console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
-},
-);
+		timeStamp = Date.now();
+		var dateFormat = new Date(timeStamp);
+		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
+	}
 
-//tournament-status command
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
+	// news command
 	if (interaction.commandName === 'news') {
 		/*// Create options for the dropdown list
 		const option1 = new StringSelectMenuOptionBuilder()
@@ -190,64 +273,31 @@ client.on('interactionCreate', async interaction => {
 			});*/
 
 		const tournamentEmbed = new EmbedBuilder()
-			/*.setColor("Purple")*/
-			/*.addFields(
-				{ name: 'No current tournament', value: 'but one is coming... <:black_man_shocked:1070808202486218853>' })*/
 			.addFields(
-				{ name: '__🔱 members Tournament #8__', value: 'Anything Goes !' },
-				{ name: '__Description :__', value: 'You can use any Pokémon' },
-				{ name: '__Requirements :__', value: '> You cannot use the same Pokémon twice' },
-				{ name: '__Maximum number of contestants :__', value: '8' },
-				{ name: `__Current number of contestants who entered :__`, value: `${contestants}` },
-				{ name: '__When ?__', value: `${tournament_timestamp}` },
-				{ name: '__Prizes__', value: '> 1st : Good IV Legendary + 200k\n > 2nd : Mid IV Legendary + 100k' });
+				{ name: 'No current tournament', value: ' ' }) //use .setColor([a,b,c]) after .addFields
+			.setColor([52, 152, 219]) //Poké Catcher blue
+		//.setColor([50, 51, 55]) //transparent for dark theme
+		/*.addFields(
+			{ name: 'No current tournament', value: 'but one is coming... <:black_man_shocked:1070808202486218853>' })*/
+		/*.addFields(
+			{ name: '__🔱 members Tournament #8__', value: 'Anything Goes !' },
+			{ name: '__Description :__', value: 'You can use any Pokémon' },
+			{ name: '__Requirements :__', value: '> You cannot use the same Pokémon twice' },
+			{ name: '__Maximum number of contestants :__', value: '8' },
+			{ name: `__Current number of contestants who entered :__`, value: `${contestants}` },
+			{ name: '__When ?__', value: `${tournament_timestamp}` },
+			{ name: '__Prizes__', value: '> 1st : Good IV Legendary + 200k\n > 2nd : Mid IV Legendary + 100k' });*/
 
 		/*.addFields(
 							{ name: '__🔱 members Tournament #8 is on !__', value: 'Go check <#1102550299488563260> ' }
 		)*/
 		await interaction.reply({ embeds: [tournamentEmbed] });
-	};
-	timeStamp = Date.now();
-	var dateFormat = new Date(timeStamp);
-	console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
-},
-);
-
-//reminder command
-const reminders = new Map();
-
-function setReminder(time, message, userId) {
-	const reminderTime = new Date(time);
-	const currentTime = new Date();
-
-	if (reminderTime <= currentTime) {
-		return 'Invalid reminder time. Please provide a future time.';
+		timeStamp = Date.now();
+		var dateFormat = new Date(timeStamp);
+		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
 
-	const timeDifference = reminderTime.getTime() - currentTime.getTime();
-
-	const reminder = setTimeout(() => {
-		const user = client.users.cache.get(userId);
-		user.send(`⏰ Reminder: ${message}`);
-		reminders.delete(userId);
-	}, timeDifference);
-
-	reminders.set(userId, reminder);
-	return 'Reminder set successfully!';
-}
-
-function clearReminder(userId) {
-	if (reminders.has(userId)) {
-		clearTimeout(reminders.get(userId));
-		reminders.delete(userId);
-		return 'Reminder cleared successfully!';
-	}
-	return 'You have no active reminders.';
-}
-
-client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isCommand()) return;
-
+	// reminder command
 	if (interaction.commandName === 'reminder') {
 		const time = interaction.options.getString('time');
 		const message = interaction.options.getString('message');
@@ -259,17 +309,14 @@ client.on('interactionCreate', async (interaction) => {
 		} else {
 			await interaction.reply('Invalid command usage. Please provide both time and message. Syntax : <today or tomorrow> <hour + AM/PM>. French timezone');
 		}
-	} /*else if (interaction.commandName === 'clearreminder') {
-    const userId = interaction.user.id;
-    const response = clearReminder(userId);
-    await interaction.reply(response);
-  }*/
-});
+	};
+	/*else if (interaction.commandName === 'clearreminder') {
+					const userId = interaction.user.id;
+					const response = clearReminder(userId);
+					await interaction.reply(response);
+				}*/
 
-
-//play command
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+	// play command
 	if (interaction.commandName === 'play') {
 		// Check if the user is in a voice channel
 		if (!interaction.member.voice.channel) {
@@ -301,8 +348,468 @@ client.on('interactionCreate', async interaction => {
 			console.error(err);
 			interaction.member.voice.channel.leave();
 		});
-	};
+	}
+
+// level command
+	if (interaction.commandName === 'level') {
+
+			const selectedOption = interaction.options.getString('range'); // Assuming 'level_range' is the name of the option
+
+			let leaderboard;
+			let message = '';
+			let previous;
+			let next;
+
+			switch (selectedOption) {
+					case '0_10':
+							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level >= 0 && member.level <= 10);
+							//message = `__Leaderboard of level 0-10 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level}`).join('\n')}`;
+							message = `This part isn't ready, try other level ranges please`;
+							/*previous = new ButtonBuilder({
+							custom_id: 'a cool button',
+							label: 'Previous',
+						});*/
+							break;
+					case '11_20':
+							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 10 && member.level <= 20);
+							message = `__Leaderboard of level 11-20 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
+							break;
+					case '21_30':
+							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 20 && member.level <= 30);
+							message = `__Leaderboard of level 21-30 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
+							break;
+					case '30+':
+							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 30);
+							message = `__Leaderboard of level 30+ :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
+							break;
+					default:
+							message = 'Invalid option selected.';
+							break;
+			}
+
+			interaction.reply(message);
+	}
+
+}); //end of interactionCreate
+
+function formatXPValue(value) {
+		if (value >= 1000) {
+				const suffixes = ['', 'k', 'M']; // Add more suffixes as needed for larger values
+				const suffixNum = Math.floor(('' + value).length / 3);
+				let shortValue = parseFloat((suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(3));
+				if (shortValue % 1 !== 0) {
+						shortValue = shortValue.toFixed(1);
+				}
+
+				// Check if the value is in the range of 0.1M - 0.9M and convert it to k
+				if (suffixNum === 2 && shortValue >= 0.1 && shortValue < 1) {
+						shortValue *= 1000;
+						return shortValue + 'k';
+				}
+
+				return shortValue + suffixes[suffixNum];
+		}
+		return value;
+}
+
+//reminder functions
+const reminders = new Map();
+
+function setReminder(time, message, userId) {
+	const reminderTime = new Date(time);
+	const currentTime = new Date();
+
+	if (reminderTime <= currentTime) {
+		return 'Invalid reminder time. Please provide a future time.';
+	}
+
+	const timeDifference = reminderTime.getTime() - currentTime.getTime();
+
+	const reminder = setTimeout(() => {
+		const user = client.users.cache.get(userId);
+		user.send(`⏰ Reminder: ${message}`);
+		reminders.delete(userId);
+	}, timeDifference);
+
+	reminders.set(userId, reminder);
+	return 'Reminder set successfully!';
+}
+
+function clearReminder(userId) {
+	if (reminders.has(userId)) {
+		clearTimeout(reminders.get(userId));
+		reminders.delete(userId);
+		return 'Reminder cleared successfully!';
+	}
+	return 'You have no active reminders.';
+}
+
+// Command interaction for houses commands
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	// Replace this with the actual role ID
+	const member = interaction.member;
+
+	if (SWMG_guildId !== '1029760958698102934') {
+		return interaction.reply('Sorry, this functionality is restricted to a specific server.');
+	}
+
+	// add-points command
+	if (interaction.commandName === 'add-points') {
+		const roleId = '1029774233544437820';
+		if (!member.roles.cache.has(roleId)) {
+			return interaction.reply('You do not have the required role to use this command.');
+		}
+		else {
+			const teamName = interaction.options.getString('team');
+			const points = interaction.options.getNumber('points');
+
+			const result = addPointsToTeam(teamName, points);
+			await interaction.reply(result);
+		}
+	}
+
+	// show-team-points command
+	if (interaction.commandName === 'show-team-points') {
+		const teamPoints = calculateTeamPoints();
+		await interaction.reply(`${teamPoints}`);
+	}
+
+	// leaderboard command
+	if (interaction.commandName === 'leaderboard') {
+		const calculateTeamPoints = () => {
+			let result = teamsJSON.map(team => ({
+				team: team.team,
+				totalPoints: team.points.reduce((acc, curr) => acc + curr, 0)
+			}));
+
+			result.sort((a, b) => b.totalPoints - a.totalPoints);
+
+			return result;
+		};
+
+		const leaderboardData = calculateTeamPoints();
+
+		const embed = new EmbedBuilder()
+			.setTitle('__Leaderboard of houses :__')
+			.addFields({ name: `🥇 1st : ${leaderboardData[0].team}`, value: `${leaderboardData[0].totalPoints} points` })
+			.addFields({ name: `🥈 2nd : ${leaderboardData[1].team}`, value: `${leaderboardData[1].totalPoints} points` })
+			.addFields({ name: `🥉 3rd : ${leaderboardData[2].team}`, value: `${leaderboardData[2].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 4th : ${leaderboardData[3].team}`, value: `${leaderboardData[3].totalPoints} points` })
+			.setColor([52, 152, 219]) // Set color (Poké Catcher blue in this example)
+
+		await interaction.reply({ embeds: [embed] });
+	}
+
+	// points-reset command
+	if (interaction.commandName === 'points-reset') {
+		const roleId = '1029774233544437820';
+		if (!member.roles.cache.has(roleId)) {
+			return interaction.reply('You do not have the required role to use this command.');
+		}
+		else {
+		const resetTeamPoints = () => {
+			// Iterate through teamsJSON and reset points for each team to empty string
+			teamsJSON.forEach(team => {
+				team.points = team.points.map(() => ''); // Set points to empty string for each team
+			});
+			// Save the updated teamsJSON to the file (teamsPoints.json in this example)
+			fs.writeFileSync('teamPoints.json', JSON.stringify(teamsJSON, null, 2));
+
+			return 'Points have been reset for all teams.';
+		}
+		};
+
+		const resetMessage = resetTeamPoints();
+
+		await interaction.reply(resetMessage);
+	}
+
+}); //end of interactionCreate for houses points
+
+// show-team-points function
+function calculateTeamPoints() {
+	let result = '';
+	let headerDisplayed = false;
+	teamsJSON.forEach(team => {
+		if (!headerDisplayed) {
+			result += '__Team Points:__\n';
+			headerDisplayed = true;
+		}
+		if (Array.isArray(team.points)) {
+			const totalPoints = team.points.reduce((acc, curr) => acc + curr, 0);
+			if (team.points.length === 1) {
+				result += `- ${team.team}: ${totalPoints} points\n`;
+			} else if (totalPoints > 0) {
+				result += `- ${team.team}: ${team.points.join('+')} = ${totalPoints} points\n`;
+			} else {
+				result += `- ${team.team}: 0 points\n`;
+			}
+		} else {
+			result += `- ${team.team}: ${team.points} points\n`;
+		}
+	});
+	return result;
+}
+
+// leaderboard command embed resend
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	if (interaction.commandName === 'add-points' || interaction.commandName === 'points-reset') {
+
+		let lastLeaderboardMessageId = null;
+		// Get the channel where the leaderboard embed will be sent (Replace with your channel ID)
+		const channel = interaction.guild.channels.cache.get('1167461518284173396');
+
+		// Delete the last leaderboard message if available
+		if (lastLeaderboardMessageId) {
+			try {
+				const lastMessage = await channel.messages.fetch(lastLeaderboardMessageId);
+				await lastMessage.delete();
+			} catch (error) {
+				console.error('Error deleting message:', error);
+			}
+		}
+
+		const calculateTeamPoints = () => {
+			let result = teamsJSON.map(team => ({
+				team: team.team,
+				totalPoints: team.points.reduce((acc, curr) => acc + curr, 0)
+			}));
+
+			result.sort((a, b) => b.totalPoints - a.totalPoints);
+
+			return result;
+		};
+
+		const leaderboardData = calculateTeamPoints();
+
+		// For each team in teamsJSON, convert points to numbers (if they are not empty strings)
+		teamsJSON.forEach(team => {
+			team.points = team.points.map(point => (point !== "" ? parseFloat(point) : 0));
+		});
+		// Send a new leaderboard embed message
+		const leaderboardEmbed = new EmbedBuilder()
+			.setTitle('Leaderboard')
+			.addFields({ name: `🥇 1st : ${leaderboardData[0].team}`, value: `${leaderboardData[0].totalPoints} points` })
+			.addFields({ name: `🥈 2nd : ${leaderboardData[1].team}`, value: `${leaderboardData[1].totalPoints} points` })
+			.addFields({ name: `🥉 3rd : ${leaderboardData[2].team}`, value: `${leaderboardData[2].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 4th : ${leaderboardData[3].team}`, value: `${leaderboardData[3].totalPoints} points` })
+			.setColor([52, 152, 219]) // Set color (Poké Catcher blue in this example)
+		const sentMessage = await channel.send({ embeds: [leaderboardEmbed] });
+		lastLeaderboardMessageId = sentMessage.id;
+	}
 });
+
+// Function to load data from a JSON file for houses points
+function loadDataFromFile() {
+	try {
+		const data = fs.readFileSync('teamPoints.json', 'utf8');
+		return JSON.parse(data);
+	} catch (err) {
+		console.error("Error reading file:", err);
+		return [];
+	}
+}
+
+// Function to save data to a JSON file
+function saveDataToFile(data) {
+	fs.writeFileSync('teamPoints.json', JSON.stringify(data), 'utf8');
+}
+
+// Load data when the bot starts
+let teamsJSON = loadDataFromFile();
+
+// Function to add points to a team
+function addPointsToTeam(teamName, points) {
+	const teamToUpdate = teamsJSON.find(team => team.team === teamName);
+	if (teamToUpdate) {
+		teamToUpdate.points.push(points);
+		saveDataToFile(teamsJSON); // Save the updated data to the file
+		return `Added ${points} points to ${teamName}.`;
+	} else {
+		return `Team ${teamName} not found.`;
+	}
+}
+
+
+
+
+// Command interaction for event points commands
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	// Replace this with the actual role ID
+	const member = interaction.member;
+
+	if (SWMG_guildId !== '1029760958698102934') {
+		return interaction.reply('Sorry, this functionality is restricted to a specific server.');
+	}
+
+	// add-points command
+	if (interaction.commandName === 'add-event-points') {
+		const roleId = '1029765248430899210';
+		if (!member.roles.cache.has(roleId)) {
+			return interaction.reply('You do not have the required role to use this command.');
+		}
+		else {
+			const eventuser = interaction.options.getString('user');
+			const points = interaction.options.getNumber('points');
+
+			const eventresult = addPointsToUser(eventuser, points);
+			await interaction.reply(eventresult);
+		}
+	}
+
+	// show-team-points command
+	if (interaction.commandName === 'show-event-points') {
+		const userPoints = calculateEventPoints();
+		if (!userPoints || userPoints.length === 0) {
+		await interaction.reply(`Event has ended.`);
+		}
+		else {
+		await interaction.reply(`${userPoints}`);
+		}
+	}
+
+	// leaderboard command
+	if (interaction.commandName === 'event-leaderboard') {
+		const calculateEventPoints = () => {
+			let result = usersJSON.map(user => ({
+				user: user.user,
+				totalPoints: user.points.reduce((acc, curr) => acc + curr, 0)
+			}));
+
+			result.sort((c, d) => d.totalPoints - c.totalPoints);
+
+			return result;
+		};
+
+		const eventleaderboardData = calculateEventPoints();
+
+		if (!eventleaderboardData || eventleaderboardData.length === 0) {
+			return interaction.reply(`Event has ended.`);
+		}
+		else {
+		const eventembed = new EmbedBuilder()
+			.setTitle('__Leaderboard of event :__')
+			.addFields({ name: `🥇 1st : ${eventleaderboardData[0].user}`, value: `${eventleaderboardData[0].totalPoints} points` })
+			.addFields({ name: `🥈 2nd : ${eventleaderboardData[1].user}`, value: `${eventleaderboardData[1].totalPoints} points` })
+			.addFields({ name: `🥉 3rd : ${eventleaderboardData[2].user}`, value: `${eventleaderboardData[2].totalPoints} points` })
+			.addFields({ name: `🎖️ 4th : ${eventleaderboardData[3].user}`, value: `${eventleaderboardData[3].totalPoints} points` })
+			.addFields({ name: `🏅 5th : ${eventleaderboardData[4].user}`, value: `${eventleaderboardData[4].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 6th : ${eventleaderboardData[5].user}`, value: `${eventleaderboardData[5].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 7th : ${eventleaderboardData[6].user}`, value: `${eventleaderboardData[6].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 8th : ${eventleaderboardData[7].user}`, value: `${eventleaderboardData[7].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 9th : ${eventleaderboardData[8].user}`, value: `${eventleaderboardData[8].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 10th : ${eventleaderboardData[9].user}`, value: `${eventleaderboardData[9].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 11st : ${eventleaderboardData[10].user}`, value: `${eventleaderboardData[10].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 12nd : ${eventleaderboardData[11].user}`, value: `${eventleaderboardData[11].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 13rd : ${eventleaderboardData[12].user}`, value: `${eventleaderboardData[12].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 14th : ${eventleaderboardData[13].user}`, value: `${eventleaderboardData[13].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 15th : ${eventleaderboardData[14].user}`, value: `${eventleaderboardData[14].totalPoints} points` })
+			.addFields({ name: `<:skull_crying:1179499973906272259> 16th : ${eventleaderboardData[15].user}`, value: `${eventleaderboardData[15].totalPoints} points` })
+			.setColor([52, 152, 219]) // Set color (Poké Catcher blue in this example)
+
+		await interaction.reply({ embeds: [eventembed] });
+		}
+	}
+
+	// points-reset command
+	if (interaction.commandName === 'event-points-reset') {
+		const roleId = '1029765248430899210';
+		if (!member.roles.cache.has(roleId)) {
+			return interaction.reply('You do not have the required role to use this command.');
+		}
+		else
+		{
+		const resetUserPoints = () => {
+			// Iterate through teamsJSON and reset points for each team to empty string
+			usersJSON.forEach(user => {
+				user.points = user.points.map(() => ''); // Set points to empty string for each team
+			});
+			// Save the updated teamsJSON to the file (teamsPoints.json in this example)
+			fs.writeFileSync('eventPoints.json', JSON.stringify(usersJSON, null, 2));
+
+			return 'Points have been reset for all users.';
+		}
+		};
+
+		const resetMessage = resetUserPoints();
+
+		await interaction.reply(resetMessage);
+	}
+
+}); //end of interactionCreate for houses points
+
+// Function to load data from a JSON file for houses points
+function loadDataFromEventFile() {
+	try {
+		const data = fs.readFileSync('eventPoints.json', 'utf8');
+		return JSON.parse(data);
+	} catch (err) {
+		console.error("Error reading file:", err);
+		return [];
+	}
+}
+
+// Function to save data to a JSON file
+function saveDataToEventFile(data) {
+	fs.writeFileSync('eventPoints.json', JSON.stringify(data), 'utf8');
+}
+
+// Load data when the bot starts
+let usersJSON = loadDataFromEventFile();
+
+// Function to add points to a team
+/*function addPointsToUser(eventuser, points) {
+	const userToUpdate = usersJSON.find(eventuser => eventuser.user === eventuser);
+	if (userToUpdate) {
+		userToUpdate.points.push(points);
+		saveDataToEventFile(usersJSON); // Save the updated data to the file
+		return `Added ${points} points to ${eventuser}.`;
+	} else {
+		return `User ${eventuser} not found.`;
+	}
+}*/
+
+function addPointsToUser(eventUser, points) {
+		const userToUpdate = usersJSON.find(user => user.user === eventUser);
+		if (userToUpdate) {
+				userToUpdate.points.push(points);
+				saveDataToEventFile(usersJSON); // Save the updated data to the file
+				return `Added ${points} points to ${eventUser}.`;
+		} else {
+				return `User ${eventUser} not found.`;
+		}
+}
+
+// show-team-points function
+function calculateEventPoints() {
+	let eventresult = '';
+	let headerDisplayed = false;
+	usersJSON.forEach(user => {
+		if (!headerDisplayed) {
+					eventresult += '__Users Points:__\n';
+			headerDisplayed = true;
+		}
+		if (Array.isArray(user.points)) {
+			const totalPoints = user.points.reduce((acc, curr) => acc + curr, 0);
+			if (user.points.length === 1) {
+					eventresult += `- ${user.user}: ${totalPoints} points\n`;
+			} else if (totalPoints > 0) {
+					eventresult += `- ${user.user}: ${user.points.join('+')} = ${totalPoints} points\n`;
+			} else {
+					eventresult += `- ${user.user}: 0 points\n`;
+			}
+		} else {
+				eventresult += `- ${user.user}: ${team.points} points\n`;
+		}
+	});
+	return eventresult;
+}
 
 //Error handler
 client.on('message', (msg) => {
@@ -317,7 +824,27 @@ process.on('unhandledRejection', (error) => {
 	console.error('Unhandled promise rejection:', error);
 });
 
-process.on('uncaughtException', (error) => {
+/*process.on('uncaughtException', (error) => {
 	console.error('Uncaught exception:', error);
 	process.exit(1); // Exit with error code 1
+});*/
+
+process.on('uncaughtException', (err) => {
+		const errorMessage = `Uncaught Exception: ${err.message}\nStack: ${err.stack}`;
+		console.error(errorMessage);
+		const owner = '602431280113778690'; // Replace with your user ID
+		const guild = client.guilds.cache.get('1029760958698102934'); // Replace with your guild ID
+		if (guild) {
+				const ownerUser = guild.members.cache.get(owner);
+				if (ownerUser) {
+						ownerUser.send(`An uncaught exception occurred:\n\`\`\`${errorMessage}\`\`\``);
+				}
+		}
+		// Log errors to a file
+		fs.appendFile('errorLog.txt', errorMessage + '\n', (appendErr) => {
+				if (appendErr) {
+						console.error('Error writing to log file:', appendErr);
+				}
+				process.exit(1); // Optionally exit the process after logging the error
+		});
 });
