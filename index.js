@@ -1,25 +1,41 @@
-const { Client, Events, GatewayIntentBits, ActivityType, MessageSelectMenu, StringSelectMenuOptionBuilder,  } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ActivityType, MessageSelectMenu, StringSelectMenuOptionBuilder, PermissionsBitField } = require('discord.js');
 //const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { token } = require('./private/config.json');
+const http = require('http');
 const fs = require('fs');
-const ytdl = require('ytdl-core-discord');
+const { createReadStream } = require('fs');
+const ytdl = require('ytdl-core');
 const contestants = "0";
 const tournament_timestamp = "<t:1696939200:F>";
 const status = "when clan will revive";
 const Mee6LevelsApi = require("mee6-levels-api");
 const SWMG_guildId = "1029760958698102934";
+const express = require('express');
+const app = express();
+const { joinVoiceChannel } = require('@discordjs/voice');
+const { Player, QueryType } = require('discord-player');
+const { YouTubeExtractor, BridgeProvider, BridgeSource } = require('@discord-player/extractor');
+const statusFile = 'badges.json';
 
 // Create a new client instance
 const client = new Client(
 	{
-		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
+		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates]
 	}
 );
+
+client.player = new Player(client, {
+		ytdlOptions: {
+				quality: "highestaudio",
+				highWaterMark: 1 << 25
+		}
+})
 
 // When the client is ready, run this code (only once)
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
+	console.log(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels`);
 });
 //client.user.setStatus('dnd');
 //client.user.setActivity('you', { type: "WATCHING" });
@@ -139,39 +155,86 @@ client.login(token);
 			type: ActivityType.Watching,
 		})};*/
 
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
 
-let lastPingStatus = 'Ping status unknown';
+//let lastPingStatus = 'Ping status unknown';
 
 // Define a route for the root URL ("/")
-app.get('/', (req, res) => {
-	res.send('Bot is running'); // You can customize this response
-});
+//app.get('/', (req, res) => {
+//	res.send('Bot is running'); // You can customize this response
+//});
 
 // Define a route for responding with "Alive"
-app.get('/ping', (req, res) => {
-	console.log('Sending "Alive" response');
-	res.send('Alive');
-});
+//app.get('/ping', (req, res) => {
+//	console.log('Sending "Alive" response');
+//	res.send('Alive');
+//});
 
 // Define a route to get the last ping status
-app.get('/ping-status', (req, res) => {
-	res.send(lastPingStatus);
-});
+//app.get('/ping-status', (req, res) => {
+//	res.send(lastPingStatus);
+//});
 
 // Your other routes and application logic go here
 
 // Start the server
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
+//app.listen(port, () => {
+//	console.log(`Server is running on port ${port}`);
+//});
 
 // Simulate sending "Ping failed" every minute
-setInterval(() => {
-	lastPingStatus = 'Ping failed';
-}, 60 * 1000); // 60,000 milliseconds = 1 minute
+//setInterval(() => {
+//	lastPingStatus = 'Ping failed';
+//}, 60 * 1000); // 60,000 milliseconds = 1 minute
+
+//app.all('/', (req, res) => {
+//		res.status(200).send('heartbeat');
+//});
+
+//function keepAlive() {
+//		app.listen(3000, () => {
+//				console.log(`Server is ready!`)
+//		})
+//};
+
+//client.on('ready', () => {
+//		keepAlive(); // Call the keepAlive function when the bot is ready
+//	});
+//keepAlive();
+
+
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+	// Implement your logic to determine health status
+	//const isOnline;/* Your logic to determine if the app is online */
+
+	// Update the JSON file with the current status
+	updateStatusFile(isOnline);
+
+	// Return the current status as a response
+	res.json({ status: isOnline ? 'online' : 'offline' });
+});
+
+// Function to update the status JSON file
+function updateStatusFile(isOnline) {
+	const statusData = [
+		{
+			status: isOnline ? 'online' : 'offline',
+			URL: isOnline
+				? 'https://img.shields.io/badge/status-online-green.svg?logo=data:image/png;base64,verylongbase64url'
+				: 'https://img.shields.io/badge/status-offline-red.svg?logo=data:image/png;base64,verylongbase64url',
+		},
+	];
+
+	// Write the updated status to the JSON file
+	fs.writeFileSync(statusFile, JSON.stringify(statusData, null, 2));
+}
+
+// Start the server
+//app.listen(port, () => {
+//	console.log(`Server is running on port ${port}`);
+//});
 
 
 client.on('message', message => {
@@ -317,7 +380,7 @@ client.on('interactionCreate', async interaction => {
 				}*/
 
 	// play command
-	if (interaction.commandName === 'play') {
+	/*if (interaction.commandName === 'play') {
 		// Check if the user is in a voice channel
 		if (!interaction.member.voice.channel) {
 			await interaction.reply('You need to be in a voice channel to play music!');
@@ -348,8 +411,94 @@ client.on('interactionCreate', async interaction => {
 			console.error(err);
 			interaction.member.voice.channel.leave();
 		});
-	}
+	}*/
 
+  if (interaction.commandName === 'play') {
+			if (!interaction.member.voice.channel) return interaction.reply("You need to be in a Voice Channel to play a song.");
+
+					// Create a play queue for the server
+			const queue = await client.player.queues.create(interaction.guild)
+
+					// Wait until you are connected to the channel
+			if (!queue.connection) await queue.connect(interaction.member.voice.channel)
+
+			let embed = new EmbedBuilder()
+
+			if (interaction.options.getSubcommand() === "song") {
+							let url = interaction.options.getString("url")
+
+							// Search for the song using the discord-player
+							const result = await client.player.search(url, {
+									requestedBy: interaction.user,
+									searchEngine: QueryType.YOUTUBE_VIDEO
+							})
+
+							// finish if no tracks were found
+							if (result.tracks.length === 0)
+									return interaction.reply("No results")
+
+							// Add the track to the queue
+							const song = result.tracks[0]
+							await queue.addTrack(song)
+							embed
+									.setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
+									.setThumbnail(song.thumbnail)
+									.setFooter({ text: `Duration: ${song.duration}`})
+
+			}
+					else if (interaction.options.getSubcommand() === "playlist") {
+
+							// Search for the playlist using the discord-player
+							let url = interaction.options.getString("url")
+							const result = await client.player.search(url, {
+									requestedBy: interaction.user,
+									searchEngine: QueryType.YOUTUBE_PLAYLIST
+							})
+
+							if (result.tracks.length === 0)
+									return interaction.reply(`No playlists found with ${url}`)
+
+							// Add the tracks to the queue
+							const playlist = result.playlist
+							await queue.addTracks(result.tracks)
+							embed
+									.setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the Queue`)
+									.setThumbnail(playlist.thumbnail)
+
+			} 
+					else if (interaction.options.getSubcommand() === "search") {
+
+							// Search for the song using the discord-player
+							let url = interaction.options.getString("searchterms")
+							const result = await client.player.search(url, {
+									requestedBy: interaction.user,
+									searchEngine: QueryType.AUTO
+							})
+
+							// finish if no tracks were found
+							if (result.tracks.length === 0)
+									return interaction.editReply("No results")
+
+							// Add the track to the queue
+							const song = result.tracks[0]
+							await queue.addTrack(song)
+							embed
+									.setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
+									.setThumbnail(song.thumbnail)
+									.setFooter({ text: `Duration: ${song.duration}`})
+			}
+
+					// Play the song
+					if (!queue.playing) await queue.play()
+
+					// Respond with the embed containing information about the player
+					await interaction.reply({
+							embeds: [embed]
+					});
+					await player.extractors.loadDefault()
+		}
+
+	
 // level command
 	if (interaction.commandName === 'level') {
 
@@ -390,7 +539,49 @@ client.on('interactionCreate', async interaction => {
 			interaction.reply(message);
 	}
 
-}); //end of interactionCreate
+	if (interaction.commandName === 'count-messages') {
+	
+		let messageId = interaction.options.getString('message');
+		const user = interaction.options.getUser('user');
+			// Check if the user invoking the command has the 'MANAGE_MESSAGES' permission
+			const member = interaction.guild.members.cache.get(interaction.user.id);
+
+			if (!member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
+				return interaction.reply('You do not have permission to use this command.');
+			}
+      else {
+			// Rest of your existing command logic goes here...
+		// Check if the provided argument is a message link
+		const messageLinkRegex = /^https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)$/;
+
+		const match = messageId.match(messageLinkRegex);
+		if (match) {
+			// If it's a message link, extract the message ID from the link
+			messageId = match[3];
+		}
+
+		// Check if the provided message ID is valid
+		const targetMessage = await interaction.channel.messages.fetch(messageId).catch(() => null);
+
+		if (!targetMessage) {
+			return interaction.reply('Invalid message ID or link. Please provide a valid message ID or link.');dis
+		}
+
+		// Fetch messages in the channel after the target message
+		const messages = await interaction.channel.messages.fetch({ limit: 100, after: targetMessage.id });
+
+		// Filter messages for the specified user
+		const userMessages = messages.filter(msg => msg.author.id === user.id);
+
+		// Count the number of messages (including the target message)
+		const messageCount = userMessages.size + 1;
+
+		// Respond to the interaction
+		interaction.reply(`Number of messages until ${targetMessage.id} for user ${user.tag}: ${messageCount}`);
+					}
+	}
+	
+}); //end of interactionCreate of main commands
 
 function formatXPValue(value) {
 		if (value >= 1000) {
@@ -836,7 +1027,7 @@ process.on('uncaughtException', (err) => {
 				}
 		}
 		// Log errors to a file
-		fs.appendFile('errorLog.txt', errorMessage + '\n', (appendErr) => {
+		fs.appendFile('errorLog.txt', errorMessage + '\n\n', (appendErr) => {
 				if (appendErr) {
 						console.error('Error writing to log file:', appendErr);
 				}
