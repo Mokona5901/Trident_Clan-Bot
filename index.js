@@ -49,112 +49,6 @@ client.on('ready', () => {
 // Log in to Discord with your client's token
 client.login(token);
 
-/*languages = [id, da, de, en-GB, en-US, es-ES, fr, hr, it, lt, hu, nl, no, pl, pt-BR, ro, fi, sv-SE, vi, tr, cs, el, bg, ru, uk, hi, th, zh-CN, ja, zh-TW, ko];
-
-	// Function to detect the user's language based on user.locale
-	function detectUserLanguage(user)
-		{
-			const userLocale = user.locale;
-			for(let i = 0; i < languages.length; i++)
-				{
-					if(userLocale.includes(languages[i]))
-						{
-							return languages[i];
-						}
-					else
-						{
-							return "en-US";
-						}
-				}
-		}
-
-	client.on('message', (message) =>
-		{
-		// Detect the user's language
-		const userLanguage = detectUserLanguage(client.user);
-		if (message.guild)
-			{
-				const member = message.guild.members.cache.get(message.author.id);
-				userLocale = member ? member.user.locale : 'en-US';
-			}
-		
-		// Define status messages for each language
-		let status = ' ';
-
-		switch (userLanguage)
-			{
-			case 'id':
-				return status = "online";
-			case 'da':
-				return status = "online";
-			case 'de':
-				return status = "online";
-			case 'en-GB':
-				return status = "online";
-			case 'en-US':
-				return status = "online";
-			case 'es-ES':
-				return status = "en línea";
-			case 'fr':
-				return status = "en ligne";
-			case 'hr':
-				return status = "online";
-			case 'it':
-				return status = "online";
-			case 'lt':
-				return status = "prisijungęs";
-			case 'hu':
-				return status = "online";
-			case 'nl':
-				return status = "online";
-			case 'no':
-				return status = "online";
-			case 'pl':
-				return status = "online";
-			case 'pt-BR':
-				return status = "online";
-			case 'ro':
-				return status = "online";
-			case 'fi':
-				return status = "online";
-			case 'sv-SE':
-				return status = "online";
-			case 'vi':
-				return status = "trực tuyến";
-			case 'tr':
-				return status = "çevrimiçi";
-			case 'cs':
-				return status = "online";
-			case 'el':
-				return status = "σε απευθείας σύνδεση";
-			case 'bg':
-				return status = "на линия";
-			case 'ru':
-				return status = "онлайн";
-			case 'uk':
-				return status = "онлайн";
-			case 'hi':
-				return status = "ऑनलाइन";
-			case 'th':
-				return status = "ออนไลน์";
-			case 'zh-CN':
-				return status = "在线";
-			case 'ja':
-				return status = "オンライン";
-			case 'zh-TW':
-				return status = "線上";
-			case 'ko':
-				return status = "온라인";
-			default:
-				return status = "online"; // Default to English
-			};
-		
-			console.log("userLocale : " + userLocale + " userLanguage : " + userLanguage + "status :" + status);
-		
-		client.user.setActivity(status, {
-			type: ActivityType.Watching,
-		})};*/
-
 //const port = process.env.PORT || 3000;
 
 //let lastPingStatus = 'Ping status unknown';
@@ -237,7 +131,7 @@ function updateStatusFile(isOnline) {
 //});
 
 
-client.on('message', message => {
+client.on('messageCreate', message => {
 	if (message.mentions.has(client.user)) {
 		message.channel.send('Hey there!');
 	}
