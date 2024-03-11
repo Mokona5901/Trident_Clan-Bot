@@ -29,4 +29,4 @@ Specific server commands :
 
 It have a working error handler to prevent it from crashing.
 
-Version from 25/01/2024
+Version from 11/03/2024
