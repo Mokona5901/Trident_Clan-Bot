@@ -1,7 +1,7 @@
 # Trident_Clan-Bot
 Cool bot for Trident clan, #1 clan of Poké Catcher Official made with discord.js
 
-| <img src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_1280.png" width="60" height="60"/> | Bot development is kinda active right now |
+| <img src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_1280.png" width="60" height="60"/> | Bot development is still active |
 |-|-|
 
 For now, it have 13 commands :
