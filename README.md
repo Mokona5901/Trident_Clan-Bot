@@ -10,7 +10,6 @@ For now, it have 13 commands :
 - [X] /ping
 - [ ] /play
 - [X] /reminder
-- [X] /rob-balls
 - [X] /server
 - [X] /tournament
 - [X] user
