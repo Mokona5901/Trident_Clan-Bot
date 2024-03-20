@@ -169,15 +169,6 @@ client.on('interactionCreate', async interaction => {
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
 
-	// rob-balls command
-	if (interaction.commandName === 'rob-balls') {
-		const user = interaction.options.getUser('user');
-		await interaction.reply(`Stolen ${user.username} balls <:troll_blur:1130497483382988890>`);
-		timeStamp = Date.now();
-		var dateFormat = new Date(timeStamp);
-		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
-	}
-
 	if (interaction.commandName === 'tournament') {
 		//const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
 		const serverOwnerId = interaction.guild.ownerId;
