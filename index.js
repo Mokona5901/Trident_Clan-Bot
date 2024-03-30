@@ -386,42 +386,38 @@ client.on('interactionCreate', async interaction => {
 	
 // level command
 	if (interaction.commandName === 'level') {
+		const currentGuildId = interaction.guild.id;
+			try {
+					const selectedOption = interaction.options.getString('range');
+					let leaderboard;
+					let message = '';
 
-			const selectedOption = interaction.options.getString('range'); // Assuming 'level_range' is the name of the option
+					switch (selectedOption) {
+							case '0_10':
+									leaderboard = (await Mee6LevelsApi.getLeaderboard(currentGuildId)).filter(member => member.level >= 0 && member.level <= 10);
+									message = `This part isn't ready, try other level ranges please`;
+									break;
+							case '11_20':
+									leaderboard = (await Mee6LevelsApi.getLeaderboard(currentGuildId)).filter(member => member.level > 10 && member.level <= 20);
+									message = `__Leaderboard of level 11-20 :__ \n\n${formatLeaderboard(leaderboard)}`;
+									break;
+							case '21_30':
+									leaderboard = (await Mee6LevelsApi.getLeaderboard(currentGuildId)).filter(member => member.level > 20 && member.level <= 30);
+									message = `__Leaderboard of level 21-30 :__ \n\n${formatLeaderboard(leaderboard)}`;
+									break;
+							case '30+':
+									leaderboard = (await Mee6LevelsApi.getLeaderboard(currentGuildId)).filter(member => member.level > 30);
+									message = `__Leaderboard of level 30+ :__ \n\n${formatLeaderboard(leaderboard)}`;
+									break;
+							default:
+									message = 'Invalid option selected.';
+									break;
+					}
 
-			let leaderboard;
-			let message = '';
-			let previous;
-			let next;
-
-			switch (selectedOption) {
-					case '0_10':
-							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level >= 0 && member.level <= 10);
-							//message = `__Leaderboard of level 0-10 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level}`).join('\n')}`;
-							message = `This part isn't ready, try other level ranges please`;
-							/*previous = new ButtonBuilder({
-							custom_id: 'a cool button',
-							label: 'Previous',
-						});*/
-							break;
-					case '11_20':
-							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 10 && member.level <= 20);
-							message = `__Leaderboard of level 11-20 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
-							break;
-					case '21_30':
-							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 20 && member.level <= 30);
-							message = `__Leaderboard of level 21-30 :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
-							break;
-					case '30+':
-							leaderboard = (await Mee6LevelsApi.getLeaderboard(SWMG_guildId)).filter(member => member.level > 30);
-							message = `__Leaderboard of level 30+ :__ \n\n${leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member. xp.totalXp)} EXP`).join('\n')}`;
-							break;
-					default:
-							message = 'Invalid option selected.';
-							break;
+					interaction.reply(message);
+			} catch (error) {
+					interaction.reply(message = `Server's Mee6 leaderbord isn't setup as public, owner should enable it at : [Mee6 leaderboard settings](<https://www.mee6.xyz/dashboard/${currentGuildId}/leaderboard>)`);
 			}
-
-			interaction.reply(message);
 	}
 
 	if (interaction.commandName === 'count-messages') {
