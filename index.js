@@ -469,24 +469,33 @@ client.on('interactionCreate', async interaction => {
 }); //end of interactionCreate of main commands
 
 function formatXPValue(value) {
-		if (value >= 1000) {
-				const suffixes = ['', 'k', 'M']; // Add more suffixes as needed for larger values
-				const suffixNum = Math.floor(('' + value).length / 3);
-				let shortValue = parseFloat((suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(3));
-				if (shortValue % 1 !== 0) {
-						shortValue = shortValue.toFixed(1);
-				}
+    if (value >= 1000) {
+        const suffixes = ['', 'k', 'M']; // Add more suffixes as needed for larger values
+        const suffixNum = Math.floor(('' + value).length / 3);
+        let shortValue = parseFloat((suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(3));
 
-				// Check if the value is in the range of 0.1M - 0.9M and convert it to k
-				if (suffixNum === 2 && shortValue >= 0.1 && shortValue < 1) {
-						shortValue *= 1000;
-						return shortValue + 'k';
-				}
+        // Ensure one decimal place if value is 100k or greater
+        if (shortValue >= 100) {
+            shortValue = Number((Math.round(shortValue * 10) / 10).toFixed(1)); // Round to one decimal place
+        }
 
-				return shortValue + suffixes[suffixNum];
-		}
-		return value;
+        // Check if the value is in the range of 0.1M - 0.9M and convert it to k
+        if (suffixNum === 2 && shortValue >= 0.1 && shortValue < 1) {
+            shortValue *= 1000;
+            return shortValue + 'k';
+        }
+
+        // Check if the value is in the range of 0.1M - 0.9M and convert it to M
+        if (suffixNum >= 2) {
+            return shortValue + suffixes[suffixNum];
+        }
+
+        // Remove decimal if it's .0
+        return shortValue % 1 === 0 ? shortValue + suffixes[suffixNum] : shortValue.toFixed(1) + suffixes[suffixNum];
+    }
+    return value;
 }
+
 
 //reminder functions
 const reminders = new Map();
