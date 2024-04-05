@@ -169,6 +169,15 @@ client.on('interactionCreate', async interaction => {
 		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
 	}
 
+	// rob-balls command
+	if (interaction.commandName === 'rob-balls') {
+		const user = interaction.options.getUser('user');
+		await interaction.reply(`Stolen ${user.username} balls <:troll_blur:1130497483382988890>`);
+		timeStamp = Date.now();
+		var dateFormat = new Date(timeStamp);
+		console.log(`${interaction.user.username} ran /${interaction.commandName} command at ${dateFormat} with a latency of ${timeStamp - interaction.createdTimestamp} ms`);
+	}
+
 	if (interaction.commandName === 'tournament') {
 		//const ownerRole = interaction.guild.roles.cache.find(role => role.name === 'Owner');
 		const serverOwnerId = interaction.guild.ownerId;
@@ -420,6 +429,7 @@ client.on('interactionCreate', async interaction => {
 			}
 	}
 
+
 	if (interaction.commandName === 'count-messages') {
 	
 		let messageId = interaction.options.getString('message');
@@ -464,33 +474,39 @@ client.on('interactionCreate', async interaction => {
 	
 }); //end of interactionCreate of main commands
 
-function formatXPValue(value) {
-    if (value >= 1000) {
-        const suffixes = ['', 'k', 'M']; // Add more suffixes as needed for larger values
-        const suffixNum = Math.floor(('' + value).length / 3);
-        let shortValue = parseFloat((suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(3));
-
-        // Ensure one decimal place if value is 100k or greater
-        if (shortValue >= 100) {
-            shortValue = Number((Math.round(shortValue * 10) / 10).toFixed(1)); // Round to one decimal place
-        }
-
-        // Check if the value is in the range of 0.1M - 0.9M and convert it to k
-        if (suffixNum === 2 && shortValue >= 0.1 && shortValue < 1) {
-            shortValue *= 1000;
-            return shortValue + 'k';
-        }
-
-        // Check if the value is in the range of 0.1M - 0.9M and convert it to M
-        if (suffixNum >= 2) {
-            return shortValue + suffixes[suffixNum];
-        }
-
-        // Remove decimal if it's .0
-        return shortValue % 1 === 0 ? shortValue + suffixes[suffixNum] : shortValue.toFixed(1) + suffixes[suffixNum];
-    }
-    return value;
+function formatLeaderboard(leaderboard) {
+		return leaderboard.map(member => `${member.username} - Level ${member.level} with ${formatXPValue(member.xp.totalXp)} EXP`).join('\n');
 }
+
+function formatXPValue(value) {
+		if (value >= 1000) {
+				const suffixes = ['', 'k', 'M']; // Add more suffixes as needed for larger values
+				const suffixNum = Math.floor(('' + value).length / 3);
+				let shortValue = parseFloat((suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(3));
+
+				// Ensure one decimal place if value is 100k or greater
+				if (shortValue >= 100) {
+						shortValue = Number((shortValue * 10) / 10).toFixed(1); // Round to one decimal place
+				}
+
+				// Check if the value is in the range of 0.1M - 0.9M and convert it to k
+				if (suffixNum === 2 && shortValue >= 0.1 && shortValue < 1) {
+						shortValue *= 1000;
+						return shortValue + 'k';
+				}
+
+				// Check if the value is in the range of 0.1M - 0.9M and convert it to M
+				if (suffixNum >= 2) {
+						return shortValue + suffixes[suffixNum];
+				}
+
+				// Remove decimal if it's .0
+				return shortValue % 1 === 0 ? shortValue + suffixes[suffixNum] : shortValue.toFixed(1) + suffixes[suffixNum];
+		}
+		return value;
+}
+
+
 
 
 //reminder functions
@@ -729,7 +745,7 @@ client.on('interactionCreate', async interaction => {
 		return interaction.reply('Sorry, this functionality is restricted to a specific server.');
 	}
 
-	// add-points command
+// add-points command
 	if (interaction.commandName === 'add-event-points') {
 		const roleId = '1029765248430899210';
 		if (!member.roles.cache.has(roleId)) {
@@ -823,6 +839,40 @@ client.on('interactionCreate', async interaction => {
 		await interaction.reply(resetMessage);
 	}
 
+// add-user-event-team command
+	if (interaction.commandName === 'add-user-event-team') {
+		const roleId = '1029765248430899210';
+		if (!member.roles.cache.has(roleId)) {
+				return interaction.reply('You do not have the required role to use this command.');
+		} else {
+			const userToAdd = interaction.options.getUser('user');
+			const team = interaction.options.getString('team');
+
+			const result = addUserToTeam(member, userToAdd, team);
+            
+			await interaction.reply(result);
+		}
+	}
+    
+    // show-event-teams command
+if (interaction.commandName === 'show-event-teams') {
+    const eventPoints = loadDataFromEventFile();
+    
+    // Extract team members from eventPoints.json
+    const lightTeamUsers = eventPoints.filter(entry => entry.team === 'Light').map(entry => entry.username);
+    const darkTeamUsers = eventPoints.filter(entry => entry.team === 'Dark').map(entry => entry.username);
+
+    // Construct the embed message
+    const eventEmbed = new EmbedBuilder()
+        .setTitle('Event Teams')
+        .setColor([52, 152, 219]) // Set color (Poké Catcher blue in this example)
+        .addFields({ name: 'Light team', value: `__Leader : mokona59__\n\n${lightTeamUsers.join('\n')}` })
+        .addFields({ name: '\nDark team', value: `__Leader : shadowpult__\n\n${darkTeamUsers.join('\n')}` });
+
+    // Send the embed message
+    await interaction.reply({ embeds: [eventEmbed] });
+}
+    
 }); //end of interactionCreate for houses points
 
 // Function to load data from a JSON file for houses points
@@ -845,17 +895,6 @@ function saveDataToEventFile(data) {
 let usersJSON = loadDataFromEventFile();
 
 // Function to add points to a team
-/*function addPointsToUser(eventuser, points) {
-	const userToUpdate = usersJSON.find(eventuser => eventuser.user === eventuser);
-	if (userToUpdate) {
-		userToUpdate.points.push(points);
-		saveDataToEventFile(usersJSON); // Save the updated data to the file
-		return `Added ${points} points to ${eventuser}.`;
-	} else {
-		return `User ${eventuser} not found.`;
-	}
-}*/
-
 function addPointsToUser(eventUser, points) {
 		const userToUpdate = usersJSON.find(user => user.user === eventUser);
 		if (userToUpdate) {
@@ -890,6 +929,49 @@ function calculateEventPoints() {
 		}
 	});
 	return eventresult;
+}
+
+//add-user-event-team function
+function addUserToTeam(member, username, team) {
+		// Read existing data from eventPoints.json
+		let eventPoints = [];
+		try {
+				eventPoints = require('./eventPoints.json');
+		} catch (error) {
+				console.error('Error reading eventPoints.json:', error);
+		}
+
+		// Check if the user already exists in the data
+		const existingUser = eventPoints.find(entry => entry.username === username);
+		if (existingUser) {
+				return `${username.username} is already assigned to ${existingUser.team}.`;
+		}
+
+		// Add the new user to the data
+		eventPoints.push({ username: username.username, team: team });
+
+		// Save the updated data back to eventPoints.json
+		try {
+				fs.writeFileSync('./eventPoints.json', JSON.stringify(eventPoints, null, 2));
+            	if (team===('Light'))
+                {
+                    var role= member.guild.roles.cache.find(role => role.name === "Dark team");
+					member.roles.add(role);
+                    return `${username.username} is now assigned to ${team} team.`;
+                }
+            else if (team===('Dark'))
+                {
+                    var role= member.guild.roles.cache.find(role => role.name === "Dark team");
+					member.roles.add(role);
+                    return `${username.username} is now assigned to ${team} team.`;
+                }
+            else
+				return `${username.username} is now assigned to ${team} team, but failed to add role.`;
+		} catch (error) {
+				console.error('Error writing eventPoints.json:', error);
+				return 'Error adding user to team.';
+		}
+	
 }
 
 //Error handler
