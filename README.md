@@ -1,5 +1,5 @@
 # Trident_Clan-Bot
-Cool bot for Trident clan, #1 clan of Poké Catcher Official made with discord.js
+Cool bot for Trident clan, #1 clan of Poké Catcher Official made with discord.js<br>
 <img src="https://discord.c99.nl/widget/theme-1/1104749620757799042.png"/>
 | <img src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_1280.png" width="60" height="60"/> | Bot development is active right now |
 |-|-|
@@ -37,5 +37,5 @@ It have a working error handler to prevent it from crashing.
 
 Version from 11/11/2024
 
-Developer :
+Developer :<br>
 <img src="https://discord.c99.nl/widget/theme-1/602431280113778690.png"/>
