@@ -15,7 +15,7 @@ const command = new SlashCommandBuilder()
 		);
 
 module.exports = {
-		data: command,
+	data: command,
 		async execute(interaction) {
 				const team = interaction.options.getString('team');
 				const pointsToAdd = interaction.options.getNumber('points');  // Changed to getNumber to accept float numbers
